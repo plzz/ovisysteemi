@@ -214,8 +214,12 @@ int main (void)
 		// Run the aux motor until SENSOR_AUX_STANDBY is reached.
 		// Run the main motor until SENSOR_DOOR_NEARLY_OPEN is reached.
 		case S_OPENING5:
-			if (sensor_aux_standby()) aux_motor_stop();
-			if (sensor_door_nearly_open()) main_motor_decelerate();
+			if (sensor_aux_standby()) {
+				aux_motor_stop();
+			}
+			if (sensor_door_nearly_open()) {
+				main_motor_decelerate();
+			}
 			if (sensor_door_open()) {
 				main_motor_stop();
 				aux_motor_stop();
