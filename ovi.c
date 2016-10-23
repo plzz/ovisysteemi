@@ -227,13 +227,46 @@ int main (void)
 			}
 			break;
 
+		// Start main motor
 		case S_CLOSING1:
+			main_motor_speed(MAIN_MOTOR_MIN_SPEED);
+			main_motor_ccw_close();
+			state = S_CLOSING2;
 			break;
 
+		// Run until SENSOR_DOOR_NEARLY_OPEN is reached, then
+		// accelerate
 		case S_CLOSING2:
+			if (sensor_door_nearly_open() == 1) {
+				main_motor_speed(MAIN_MOTOR_MAX_SPEED);
+				state = S_CLOSING3;
+			}
 			break;
 
+		// Wait until SENSOR_AUX_BACK is reached. Then slow down main
+		// motor to minimum speed and start auxiliary motor.
 		case S_CLOSING3:
+			if (sensor_aux_back()) {
+				aux_motor_cw_close();
+				main_motor_speed(MAIN_MOTOR_MIN_SPEED);
+				state = S_CLOSING4;
+			}
+			break;
+
+		case S_CLOSING4:
+			magnet_on();
+			if (sensor_door_closed()) {
+				main_motor_off();
+				aux_motor_ccw_open();
+				state = S_CLOSING5;
+			}
+			break;
+
+		case S_CLOSING5:
+			if (sensor_aux_front()) {
+				aux_motor_off();
+				state = S_CLOSED;
+			}
 			break;
 
 		default:
