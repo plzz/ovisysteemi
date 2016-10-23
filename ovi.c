@@ -138,7 +138,9 @@ enum state_t { S_STOP,
 
 	       S_CLOSING1,
 	       S_CLOSING2,
-	       S_CLOSING3 };
+	       S_CLOSING3,
+	       S_CLOSING4,
+	       S_CLOSING5 };
 
 enum err_t { E_NOERR = 0,
              E_TIMEOUT = 1,
