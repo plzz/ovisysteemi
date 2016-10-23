@@ -1,3 +1,4 @@
+#include <avr/interrupt.h>
 #include <avr/io.h>
 #include <stdbool.h>
 
@@ -43,6 +44,11 @@ void init(void) {
 
 	ICR1 = MAIN_MOTOR_PWM_TOP;
 	OCR1B = 0;			// Initial motor speed 0 = 0%
+
+	TIMSK0 |=_BV(TOIE0);		// Enable timer 0 overflow interrupt
+	OCR0A = 99;			// Timer 0 compare value
+	TCCR0B = _BV(CS02) | _BV(CS00);	// Divide timer 0 clock by 1024
+	sei();				// Enable interrupts
 }
 
 void main_motor_stop() {
@@ -148,10 +154,27 @@ enum err_t { E_NOERR = 0,
              E_AUX_MOTOR_FAULT = 3 };
 
 // These counters are all incremented by a timer interrupt every 100ms.
-uint8_t		s_opening1_counter;		// Delay counter for S_OPENING1
-uint16_t	movement_timeout_counter;	// Movement timeout
-uint8_t		main_motor_encoder_counter;
-uint8_t		aux_motor_encoder_counter;
+volatile uint8_t s_opening1_counter;		// Delay counter for S_OPENING1
+volatile uint16_t movement_timeout_counter;	// Movement timeout
+volatile uint8_t main_motor_encoder_counter;
+volatile uint8_t aux_motor_encoder_counter;
+
+ISR(TIMER1_OVF_vect) {
+	TCNT0 = 0; // Zero the counter again.
+
+	if (++s_opening1_counter == 0) {
+		s_opening1_counter = 255;
+	}
+	if (++movement_timeout_counter == 0) {
+		movement_timeout_counter = 65535;
+	}
+	if (++main_motor_encoder_counter == 0) {
+		main_motor_encoder_counter = 255;
+	}
+	if (++aux_motor_encoder_counter == 0) {
+		aux_motor_encoder_counter = 255;
+	}
+}
 
 int main (void)
 {
