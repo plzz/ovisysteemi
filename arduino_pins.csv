@@ -1,0 +1,21 @@
+Arduino,AVR,Tyyppi,Selostus,Tasot,,Nimi
+0,PD0,"Digital input","RS-232 RXD","0V = RS-232 +12V","5V = RS-232 -12V",
+1,PD1,"Digital output","RS-232 TXD","0V = RS-232 +12V","5V = RS-232 -12V",
+2,PD2,"Digital input","Anturi 6","Päämoottorin pulssilaskuri","min. X pulssia/s",main_encoder
+3,PD3,"Digital input","Anturi 7","Apumoottorin pulssilaskuri","min. X pulssia/s",aux_encoder
+4,PD4,"Digital input","Anturi 1","0V=ei kohdalla",5V=kohdalla,door_fully_closed
+5,PD5,"Digital input","Anturi 2","0V=ei kohdalla",5V=kohdalla,door_fully_open
+6,PD6,"Digital input","Anturi 3","0V=ei kohdalla",5V=kohdalla,door_nearly_open
+7,PD7,"Digital input","Anturi 4","0V=ei kohdalla",5V=kohdalla,aux_front
+8,PB0,"Digital input","Anturi 5","0V=ei kohdalla",5V=kohdalla,aux_standby
+9,PB1,"Digital input","Anturi 8","0V=ei kohdalla",5V=kohdalla,aux_back
+10,PB2/OC1B,"PWM output","Päämoottorin nopeus",0V=0%,5V=100%,
+11,PB3,,,,,
+12,PB4,,,,,
+13,PB5,,,,,
+A0,PC0,"Digital output","Päämoottorin suunta","0V=CW (auki)","5V=CCW (kiinni)",
+A1,PC1,"Digital output","Päämoottorin virta",0V=pois,5V=päällä,
+A2,PC2,"Digital output","Apumoottorin virta",0V=pois,5V=päällä,
+A3,PC3,"Digital output","Apumoottorin suunta","0V=CW (kiinni)","5V=CCW (auki)",
+A4,PC4,"Digital output",Sähkömagneetit,0V=pois,5V=päällä,
+A5,PC5,"Digital output","Varalla (relelähtö)",0V=pois,5V=päällä,
