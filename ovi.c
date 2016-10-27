@@ -14,10 +14,14 @@ int const MAGNET_OPEN_WAIT = 5;		// 10ths of a second
 void init(void) {
 					// B0 SENSOR_AUX_STANDBY (input)
 					// B1 SENSOR_AUX_BACK (input)
-	DDRB |= _BV(DDB2)		// B2 OC1B = main motor pwm (output)
-	      | _BV(DDB3)		// B3 unused (output)
-	      | _BV(DDB4)		// B4 unused (output)
-	      | _BV(DDB5);		// B5 unused (output)
+	DDRB |= _BV(DDB2);		// B2 OC1B = main motor pwm (output)
+					// B3 BUTTON_OPEN (input)
+					// B4 BUTTON_CLOSE (input)
+					// B5 BUTTON_STOP (input)
+
+	PORTB |= _BV(PB3)		// B3 BUTTON_OPEN internal pull-up
+	       | _BV(PB4)		// B4 BUTTON_CLOSE internal pull-up
+	       | _BV(PB5);		// B5 BUTTON_STOP internal pull-up
 
 	DDRC |= _BV(DDC0)		// C0 Main motor direction (output)
 	      | _BV(DDC1)		// C1 Main motor enable (output)
