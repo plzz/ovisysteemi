@@ -292,12 +292,11 @@ int main (void)
 
 		// Start accelerating the main motor.
 		case S_OPENING4:
-			main_motor_speed(MAIN_MOTOR_MIN_SPEED);
+			set_main_motor_speed(MAIN_MOTOR_MIN_SPEED);
 			main_motor_cw_open();
-			main_motor_accelerate();
 			state = S_OPENING5;
 			break;
-
+/*
  		// The door is open enough to enable the main motor.
 		// Run the aux motor until SENSOR_AUX_STANDBY is reached.
 		// Run the main motor until SENSOR_DOOR_NEARLY_OPEN is reached.
@@ -356,8 +355,9 @@ int main (void)
 				state = S_CLOSED;
 			}
 			break;
-
+*/
 		default:
+/*
 			if (main_motor_fault()) {
 				err = E_MAIN_MOTOR_FAULT;
 				state = S_STOP;
@@ -370,6 +370,7 @@ int main (void)
 				err = E_TIMEOUT;
 				state = S_STOP;
 			}
+*/
 			handle_io(&state);
 			break;
 	}
