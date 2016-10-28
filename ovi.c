@@ -134,7 +134,7 @@ bool aux_encoder() {
 	return PORTD | _BV(PD3);
 }
 
-bool door_fully_closed() {
+bool sensor_door_closed() {
 	return PORTD | _BV(PD4);
 }
 
