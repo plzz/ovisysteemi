@@ -14,6 +14,7 @@ int const MAGNET_OPEN_WAIT = 5;		// 10ths of a second
 #define BAUD 9600
 
 #include <util/setbaud.h>
+#include <util/delay.h>
 
 // Hardware abstraction layer
 
@@ -127,47 +128,47 @@ void magnet_off() {
 }
 
 bool sensor_main_encoder() {
-	return PORTD | _BV(PD2);
+	return PIND & _BV(PD2);
 }
 
 bool aux_encoder() {
-	return PORTD | _BV(PD3);
+	return PIND & _BV(PD3);
 }
 
 bool sensor_door_closed() {
-	return PORTD | _BV(PD4);
+	return PIND & _BV(PD4);
 }
 
 bool door_fully_open() {
-	return PORTD | _BV(PD5);
+	return PIND & _BV(PD5);
 }
 
 bool door_nearly_open() {
-	return PORTD | _BV(PD6);
+	return PIND & _BV(PD6);
 }
 
 bool aux_front() {
-	return PORTD | _BV(PD7);
+	return PIND & _BV(PD7);
 }
 
 bool aux_standby() {
-	return PORTB | _BV(PB0);
+	return PINB & _BV(PB0);
 }
 
 bool aux_back() {
-	return PORTB | _BV(PB1);
+	return PINB & _BV(PB1);
 }
 
 bool button_open() {
-	return PORTB | _BV(PB3);
+	return !(PINB & _BV(PB3));
 }
 
 bool button_close() {
-	return PORTB | _BV(PB4);
+	return !(PINB & _BV(PB4));
 }
 
 bool button_stop() {
-	return PORTB | _BV(PB5);
+	return !(PINB & _BV(PB5));
 }
 
 // Main state machine
