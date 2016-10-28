@@ -277,7 +277,7 @@ int main (void)
 
 		// Wait
 		case S_OPENING2:
-			if (s_opening1_counter = MAGNET_OPEN_WAIT) {
+			if (s_opening1_counter == MAGNET_OPEN_WAIT) {
 				state = S_OPENING3;
 			}
 			break;
