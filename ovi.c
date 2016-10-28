@@ -216,17 +216,15 @@ ISR(TIMER1_OVF_vect) {
 	}
 }
 
-void uart_putchar(char c) {
+int uart_putchar(char c, FILE *stream) {
     loop_until_bit_is_set(UCSR0A, UDRE0);	// Wait until data register empty.
     UDR0 = c;
 }
 
-char uart_getchar(void) {
+int uart_getchar(FILE *stream) {
     loop_until_bit_is_set(UCSR0A, RXC0);	// Wait until data exists.
     return UDR0;
 }
-
-FILE uart_io FDEV_SETUP_STREAM(uart_putchar, uart_getchar, _FDEV_SETUP_RW);
 
 void handle_io() {
 	puts(  "OPEN  CLOSE  STOP");
@@ -236,7 +234,14 @@ void handle_io() {
 int main (void)
 {
 	init();
-	
+
+	FILE uart_file;
+	uart_file.put = uart_putchar;
+	uart_file.get = uart_getchar;
+	uart_file.flags = _FDEV_SETUP_RW;
+
+	stdout = stdin = &uart_file;
+
 	enum state_t state = S_STOP;
 	enum err_t err = E_NOERR;
 
