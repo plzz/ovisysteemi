@@ -218,8 +218,9 @@ ISR(TIMER1_OVF_vect) {
 }
 
 int uart_putchar(char c, FILE *stream) {
-    loop_until_bit_is_set(UCSR0A, UDRE0);	// Wait until data register empty.
-    UDR0 = c;
+	loop_until_bit_is_set(UCSR0A, UDRE0);	// Wait until data register empty.
+	UDR0 = c;
+	return 0;
 }
 
 int uart_getchar(FILE *stream) {
@@ -227,24 +228,23 @@ int uart_getchar(FILE *stream) {
     return UDR0;
 }
 
-void handle_io() {
-	puts(  "OPEN  CLOSE  STOP");
-	printf("%i     %i      %i", button_open(), button_close(), button_stop());
+FILE uart_io = FDEV_SETUP_STREAM(uart_putchar, uart_getchar, _FDEV_SETUP_RW);
+
+void handle_io(enum state_t *state) {
 }
 
 int main (void)
 {
 	init();
 
-	FILE uart_file;
-	uart_file.put = uart_putchar;
-	uart_file.get = uart_getchar;
-	uart_file.flags = _FDEV_SETUP_RW;
-
-	stdout = stdin = &uart_file;
+	stdout = stdin = &uart_io;
 
 	enum state_t state = S_STOP;
 	enum err_t err = E_NOERR;
+
+	while (1) {
+	if (button_open()) puts("OPEN\n");
+}
 
 	while(1) switch (state) {
 		// Initial state if door is not conclusively open or closed.
