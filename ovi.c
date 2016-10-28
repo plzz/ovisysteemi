@@ -134,6 +134,18 @@ bool aux_back() {
 	return PORTB | _BV(PB1);
 }
 
+bool button_open() {
+	return PORTB | _BV(PB3);
+}
+
+bool button_close() {
+	return PORTB | _BV(PB4);
+}
+
+bool button_stop() {
+	return PORTB | _BV(PB5);
+}
+
 // Main state machine
 
 enum state_t { S_STOP,
