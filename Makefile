@@ -7,4 +7,4 @@ ovi.hex: ovi $(shell test -e .eeprom && echo .eeprom)
 ovi: ovi.o
 	avr-gcc -mmcu=atmega328p ovi.o -o ovi
 ovi.o: ovi.c
-	avr-gcc -Os -DF_CPU=16000000UL -mmcu=atmega328p -c -o ovi.o ovi.c
+	avr-gcc -Wall -pedantic -Os -DF_CPU=16000000UL -mmcu=atmega328p -c -o ovi.o ovi.c
