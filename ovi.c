@@ -9,9 +9,16 @@ int const MAIN_MOTOR_MIN_SPEED = 30;
 int const MAIN_MOTOR_MAX_SPEED = 255;
 int const MAGNET_OPEN_WAIT = 5;		// 10ths of a second
 
+#define F_CPU 16000000UL
+#define BAUD 9600
+
+#include <util/setbaud.h>
+
 // Hardware abstraction layer
 
 void init(void) {
+	// DDR and pull-ups
+
 					// B0 SENSOR_AUX_STANDBY (input)
 					// B1 SENSOR_AUX_BACK (input)
 	DDRB |= _BV(DDB2);		// B2 OC1B = main motor pwm (output)
@@ -38,6 +45,22 @@ void init(void) {
 					// D5 SENSOR_DOOR_OPEN (input)
 					// D6 SENSOR_DOOR_NEARLY_OPEN (input)
 					// D7 SENSOR_AUX_FRONT (input)
+
+	// UART
+
+	UBRR0H = UBRRH_VALUE;		// Baud rate
+	UBRR0L = UBRRL_VALUE;
+
+#if USE_2X
+	UCSR0A |= _BV(U2X0);		// UART double speed
+#else
+	UCSR0A &= ~(_BV(U2X0));
+#endif
+
+	UCSR0C = _BV(UCSZ01) | _BV(UCSZ00); /* 8-bit data */
+	UCSR0B = _BV(RXEN0) | _BV(TXEN0);   /* Enable RX and TX */
+
+	// Timer
 
 	TCCR1A |= _BV(COM1B1)		// Clear OC1B on Compare Match
 		| _BV(WGM11)
@@ -192,6 +215,23 @@ ISR(TIMER1_OVF_vect) {
 	}
 }
 
+void uart_putchar(char c) {
+    loop_until_bit_is_set(UCSR0A, UDRE0);	// Wait until data register empty.
+    UDR0 = c;
+}
+
+char uart_getchar(void) {
+    loop_until_bit_is_set(UCSR0A, RXC0);	// Wait until data exists.
+    return UDR0;
+}
+
+FILE uart_io FDEV_SETUP_STREAM(uart_putchar, uart_getchar, _FDEV_SETUP_RW);
+
+void handle_io() {
+	puts(  "OPEN  CLOSE  STOP");
+	printf("%i     %i      %i", button_open(), button_close(), button_stop());
+}
+
 int main (void)
 {
 	init();
@@ -324,6 +364,7 @@ int main (void)
 				err = E_TIMEOUT;
 				state = S_STOP;
 			}
+			handle_io(&state);
 			break;
 	}
 }
