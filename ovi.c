@@ -200,7 +200,7 @@ volatile uint16_t movement_timeout_counter;	// Movement timeout
 volatile uint8_t main_motor_encoder_counter;
 volatile uint8_t aux_motor_encoder_counter;
 
-ISR(TIMER1_OVF_vect) {
+ISR(TIMER0_OVF_vect) {
 	TCNT0 = 0; // Zero the counter again.
 
 	if (++s_opening1_counter == 0) {
