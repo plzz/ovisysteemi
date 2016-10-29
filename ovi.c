@@ -218,14 +218,14 @@ ISR(TIMER0_OVF_vect) {
 }
 
 int uart_putchar(char c, FILE *stream) {
-	loop_until_bit_is_set(UCSR0A, UDRE0);	// Wait until data register empty.
+	loop_until_bit_is_set(UCSR0A, UDRE0);	// Wait until UART is free.
 	UDR0 = c;
 	return 0;
 }
 
 int uart_getchar(FILE *stream) {
-    loop_until_bit_is_set(UCSR0A, RXC0);	// Wait until data exists.
-    return UDR0;
+	loop_until_bit_is_set(UCSR0A, RXC0);	// Wait until data exists.
+	return UDR0;
 }
 
 FILE uart_io = FDEV_SETUP_STREAM(uart_putchar, uart_getchar, _FDEV_SETUP_RW);
