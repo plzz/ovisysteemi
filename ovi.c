@@ -1,3 +1,5 @@
+#define BAUD 9600
+
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include <stdbool.h>
@@ -10,8 +12,6 @@ int const MAIN_MOTOR_MIN_SPEED = 30;
 int const MAIN_MOTOR_MAX_SPEED = 255;
 int const MAGNET_OPEN_WAIT = 5;		// 10ths of a second
 
-#define F_CPU 16000000UL
-#define BAUD 9600
 
 #include <util/setbaud.h>
 #include <util/delay.h>
