@@ -168,7 +168,7 @@ bool button_close() {
 }
 
 bool button_stop() {
-	return !(PINB & _BV(PB5));
+	return PINB & _BV(PB5);
 }
 
 // Main state machine
