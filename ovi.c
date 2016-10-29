@@ -243,7 +243,16 @@ int main (void)
 	enum err_t err = E_NOERR;
 
 	while (1) {
-	if (button_open()) puts("OPEN\n");
+if (door_closed())		puts("door_closed\r\n");
+if (door_fully_open())		puts("door_fully_open\r\n");
+if (door_nearly_open())		puts("door_nearly_open\r\n");
+if (aux_front())		puts("aux_front\r\n");
+if (aux_standby())		puts("aux_standby\r\n");
+if (aux_back())			puts("aux_back\r\n");
+if (button_open())		puts("button_open\r\n");
+if (button_close()) 		puts("button_close\r\n");
+if (button_stop()) 		puts("button_stop\r\n");
+
 }
 
 	while(1) switch (state) {
