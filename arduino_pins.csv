@@ -1,4 +1,4 @@
-Arduino,MerkkiLED,AVR,Tyyppi,Selostus,Tasot,,Nimi
+Arduino,LED,AVR,Tyyppi,Selostus,Tasot,,Nimi
 0,,PD0,Digital input,RS-232 RXD,0V = RS-232 +12V,5V = RS-232 -12V,
 1,,PD1,Digital output,RS-232 TXD,0V = RS-232 +12V,5V = RS-232 -12V,
 2,8,PD2,Digital input,Anturi 8,0V=ei kohdalla,5V=kohdalla,door_fully_open
