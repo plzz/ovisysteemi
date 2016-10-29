@@ -130,35 +130,11 @@ void magnet_off() {
 	PORTC &= ~(_BV(PC4));
 }
 
-bool main_encoder() {
-	return PIND & _BV(PD2);
-}
-
-bool aux_encoder() {
-	return PIND & _BV(PD3);
-}
-
-bool door_closed() {
-	return PIND & _BV(PD4);
-}
-
-bool door_fully_open() {
-	return PIND & _BV(PD5);
-}
-
 bool door_nearly_open() {
-	return PIND & _BV(PD6);
-}
-
-bool aux_front() {
-	return PIND & _BV(PD7);
-}
-
-bool aux_standby() {
 	return PINB & _BV(PB0);
 }
 
-bool aux_back() {
+bool door_fully_closed() {
 	return PINB & _BV(PB1);
 }
 
@@ -172,6 +148,30 @@ bool button_close() {
 
 bool button_stop() {
 	return PINB & _BV(PB5);
+}
+
+bool door_fully_open() {
+	return PIND & _BV(PD2);
+}
+
+bool main_encoder() {
+	return PIND & _BV(PD3);
+}
+
+bool aux_inner_limit() {
+	return PIND & _BV(PD4);
+}
+
+bool aux_outer_limit() {
+	return PIND & _BV(PD5);
+}
+
+bool door_nearly_closed() {
+	return PIND & _BV(PD6);
+}
+
+bool aux_encoder() {
+	return PIND & _BV(PD7);
 }
 
 // Main state machine
