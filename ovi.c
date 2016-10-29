@@ -26,6 +26,8 @@ void init(void) {
 					// B3 button_open (input)
 					// B4 button_close (input)
 					// B5 button_stop (input)
+					// B6 XTAL1, unused (input)
+					// B7 XTAL2, unused (input)
 
 	PORTB |= _BV(PB3)		// B3 BUTTON_OPEN internal pull-up
 	       | _BV(PB4)		// B4 BUTTON_CLOSE internal pull-up
@@ -36,11 +38,12 @@ void init(void) {
 	      | _BV(DDC2)		// C2 Auxiliary motor enable (output)
 	      | _BV(DDC3)		// C3 Auxiliary motor direction (output)
 	      | _BV(DDC4)		// C4 Magnet enable (output)
-	      | _BV(DDC5)		// C5 unused relay
-	      | _BV(DDC6);		// C6 unused
+	      | _BV(DDC5);		// C5 unused relay (output)
+					// C6 reset, unused (input)
 
 					// D0 RS232 RX (input)
 	DDRD |= _BV(DDD1);		// D1 RS232 TX (output)
+					// D2 door_fully_open (input)
 					// D3 main_encoder (input)
 					// D4 aux_inner_limit (input)
 					// D5 aux_outer_limit (input)
