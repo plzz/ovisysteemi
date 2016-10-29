@@ -41,6 +41,8 @@ void init(void) {
 	      | _BV(DDC5);		// C5 unused relay (output)
 					// C6 reset, unused (input)
 
+	PORTC |= _BV(PC0) | _BV(PC1) | _BV(PC2) | _BV(PC3) | _BV(PC4) | _BV(PC5);
+
 					// D0 RS232 RX (input)
 	DDRD |= _BV(DDD1);		// D1 RS232 TX (output)
 					// D2 door_fully_open (input)
@@ -85,18 +87,18 @@ void init(void) {
 
 void main_motor_stop() {
 	OCR1B = 0;			// Zero speed
-	PORTC &= ~(_BV(PC0)		// Clear direction
-		 | _BV(PC1));		// Clear enable
+	PORTC |= _BV(PC0)		// Set direction
+		 | _BV(PC1);		// Set enable
 }
 
 void main_motor_cw_open() {
-	PORTC &= ~(_BV(PC0));		// Clear direction -> CW (open)
-	PORTC |= _BV(PC1);		// Set enable
+	PORTC |= _BV(PC0);		// Set direction -> CW (open)
+	PORTC &= ~(_BV(PC1));		// Clear enable
 }
 
 void main_motor_ccw_close() {
-	PORTC |= _BV(PC0)		// Set direction -> CCW (close)
-	       | _BV(PC1);		// Set enable
+	PORTC &= ~(_BV(PC0)		// Clear direction -> CCW (close)
+	         | _BV(PC1));		// Clear enable
 }
 
 void set_main_motor_speed(int speed) {
@@ -108,26 +110,26 @@ int get_main_motor_speed() {
 }
 
 void aux_motor_stop() {
-	PORTC &= ~(_BV(PC3)		// Clear direction
-		 | _BV(PC2));		// Clear enable
-}
-
-void aux_motor_cw_close() {
-	PORTC &= ~(_BV(PC3));		// Clear direction -> CW (open)
-	PORTC |= _BV(PC2);		// Set enable
-}
-
-void aux_motor_ccw_open() {
-	PORTC |= _BV(PC3)		// Set direction -> CCW (close)
+	PORTC |= _BV(PC3)		// Set direction
 	       | _BV(PC2);		// Set enable
 }
 
+void aux_motor_cw_close() {
+	PORTC |= _BV(PC3);		// Set direction -> CW (open)
+	PORTC &= ~(_BV(PC2));		// Clear enable
+}
+
+void aux_motor_ccw_open() {
+	PORTC &= ~(_BV(PC3)		// Set direction -> CCW (close)
+	         | _BV(PC2));		// Set enable
+}
+
 void magnet_on() {
-	PORTC |= _BV(PC4);
+	PORTC &= ~(_BV(PC4));
 }
 
 void magnet_off() {
-	PORTC &= ~(_BV(PC4));
+	PORTC |= _BV(PC4);
 }
 
 bool door_nearly_open() {

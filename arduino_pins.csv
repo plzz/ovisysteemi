@@ -13,9 +13,9 @@ Arduino,LED,AVR,Tyyppi,Selostus,Tasot,,Nimi
 11,,PB3,Digital input with pull-up,Auki-nappi,0V=painettu,5V=ei painettu,button_open
 12,,PB4,Digital input with pull-up,Kiinni-nappi,0V=painettu,5V=ei painettu,button_close
 13,,PB5,Digital input with pull-up,Seis-nappi,0V=ei painettu,5V=painettu,button_stop
-A0,,PC0,Digital output,Päämoottorin suunta,0V=CW (auki),5V=CCW (kiinni),
-A1,,PC1,Digital output,Päämoottorin virta,0V=pois,5V=päällä,
-A2,,PC2,Digital output,Apumoottorin virta,0V=pois,5V=päällä,
-A3,,PC3,Digital output,Apumoottorin suunta,0V=CW (kiinni),5V=CCW (auki),
-A4,,PC4,Digital output,Sähkömagneetit,0V=pois,5V=päällä,
-A5,,PC5,Digital output,Varalla (relelähtö),0V=pois,5V=päällä,
+A0,,PC0,Digital output,Päämoottorin suunta,5V=CW (auki),0V=CCW (kiinni),
+A1,,PC1,Digital output,Päämoottorin virta,5V=pois,0V=päällä,
+A2,,PC2,Digital output,Apumoottorin virta,5V=pois,0V=päällä,
+A3,,PC3,Digital output,Apumoottorin suunta,5V=CW (kiinni),0V=CCW (auki),
+A4,,PC4,Digital output,Sähkömagneetit,5V=pois,0V=päällä,
+A5,,PC5,Digital output,Varalla (relelähtö),5V=pois,0V=päällä,
