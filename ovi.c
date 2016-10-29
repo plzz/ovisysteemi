@@ -4,6 +4,8 @@
 #include <avr/io.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <util/delay.h>
+#include <util/setbaud.h>
 
 // Configurable constants
 
@@ -12,9 +14,6 @@ int const MAIN_MOTOR_MIN_SPEED = 30;
 int const MAIN_MOTOR_MAX_SPEED = 255;
 int const MAGNET_OPEN_WAIT = 5;		// 10ths of a second
 
-
-#include <util/setbaud.h>
-#include <util/delay.h>
 
 // Hardware abstraction layer
 
