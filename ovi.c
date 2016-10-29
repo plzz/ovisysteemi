@@ -66,7 +66,8 @@ void init(void) {
 
 	// Timer
 
-	TCCR1A |= _BV(COM1B1)		// Clear OC1B on Compare Match
+	TCCR1A |= _BV(COM1B0)
+		| _BV(COM1B1)		// Set OC1B on Compare Match
 		| _BV(WGM11)
 		| _BV(WGM12);		// Fast PWM
 
