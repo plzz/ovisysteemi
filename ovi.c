@@ -127,7 +127,7 @@ void magnet_off() {
 	PORTC &= ~(_BV(PC4));
 }
 
-bool sensor_main_encoder() {
+bool main_encoder() {
 	return PIND & _BV(PD2);
 }
 
@@ -135,7 +135,7 @@ bool aux_encoder() {
 	return PIND & _BV(PD3);
 }
 
-bool sensor_door_closed() {
+bool door_closed() {
 	return PIND & _BV(PD4);
 }
 
@@ -286,7 +286,7 @@ int main (void)
 		// Wait until SENSOR_DOOR_CLOSED opens.
 		case S_OPENING3:
 			aux_motor_ccw_open();
-			if (sensor_door_closed() == 0) {
+			if (door_closed() == 0) {
 				state = S_OPENING4;
 			}
 			break;
@@ -302,13 +302,13 @@ int main (void)
 		// Run the aux motor until SENSOR_AUX_STANDBY is reached.
 		// Run the main motor until SENSOR_DOOR_NEARLY_OPEN is reached.
 		case S_OPENING5:
-			if (sensor_aux_standby()) {
+			if (aux_standby()) {
 				aux_motor_stop();
 			}
-			if (sensor_door_nearly_open()) {
+			if (door_nearly_open()) {
 				main_motor_decelerate();
 			}
-			if (sensor_door_open()) {
+			if (door_open()) {
 				main_motor_stop();
 				aux_motor_stop();
 				state = S_OPEN;
@@ -325,7 +325,7 @@ int main (void)
 		// Run until SENSOR_DOOR_NEARLY_OPEN is reached, then
 		// accelerate
 		case S_CLOSING2:
-			if (sensor_door_nearly_open() == 1) {
+			if (door_nearly_open() == 1) {
 				main_motor_speed(MAIN_MOTOR_MAX_SPEED);
 				state = S_CLOSING3;
 			}
@@ -334,7 +334,7 @@ int main (void)
 		// Wait until SENSOR_AUX_BACK is reached. Then slow down main
 		// motor to minimum speed and start auxiliary motor.
 		case S_CLOSING3:
-			if (sensor_aux_back()) {
+			if (aux_back()) {
 				aux_motor_cw_close();
 				main_motor_speed(MAIN_MOTOR_MIN_SPEED);
 				state = S_CLOSING4;
@@ -343,7 +343,7 @@ int main (void)
 
 		case S_CLOSING4:
 			magnet_on();
-			if (sensor_door_closed()) {
+			if (door_closed()) {
 				main_motor_off();
 				aux_motor_ccw_open();
 				state = S_CLOSING5;
@@ -351,7 +351,7 @@ int main (void)
 			break;
 
 		case S_CLOSING5:
-			if (sensor_aux_front()) {
+			if (aux_front()) {
 				aux_motor_off();
 				state = S_CLOSED;
 			}
