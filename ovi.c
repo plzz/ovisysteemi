@@ -20,12 +20,12 @@ int const MAGNET_OPEN_WAIT = 5;		// 10ths of a second
 void init(void) {
 	// DDR and pull-ups
 
-					// B0 SENSOR_AUX_STANDBY (input)
-					// B1 SENSOR_AUX_BACK (input)
+					// B0 door_nearly_open (input)
+					// B1 door_fully_closed (input)
 	DDRB |= _BV(DDB2);		// B2 OC1B = main motor pwm (output)
-					// B3 BUTTON_OPEN (input)
-					// B4 BUTTON_CLOSE (input)
-					// B5 BUTTON_STOP (input)
+					// B3 button_open (input)
+					// B4 button_close (input)
+					// B5 button_stop (input)
 
 	PORTB |= _BV(PB3)		// B3 BUTTON_OPEN internal pull-up
 	       | _BV(PB4)		// B4 BUTTON_CLOSE internal pull-up
@@ -41,11 +41,11 @@ void init(void) {
 
 					// D0 RS232 RX (input)
 	DDRD |= _BV(DDD1);		// D1 RS232 TX (output)
-					// D3 SENSOR_AUX_MOTOR_PULSE (input)
-					// D4 SENSOR_DOOR_CLOSED (input)
-					// D5 SENSOR_DOOR_OPEN (input)
-					// D6 SENSOR_DOOR_NEARLY_OPEN (input)
-					// D7 SENSOR_AUX_FRONT (input)
+					// D3 main_encoder (input)
+					// D4 aux_inner_limit (input)
+					// D5 aux_outer_limit (input)
+					// D6 door_nearly_closed (input)
+					// D7 aux_encoder (input)
 
 	// UART
 
