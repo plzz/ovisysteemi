@@ -246,18 +246,18 @@ int main (void)
 	enum err_t err = E_NOERR;
 
 	while (1) {
-if (door_closed())		puts("door_closed\r\n");
 if (door_fully_open())		puts("door_fully_open\r\n");
+if (aux_inner_limit())		puts("aux_inner_limit\r\n");
+if (aux_outer_limit())		puts("aux_outer_limit\r\n");
+if (door_nearly_closed())	puts("door_nearly_closed\r\n");
 if (door_nearly_open())		puts("door_nearly_open\r\n");
-if (aux_front())		puts("aux_front\r\n");
-if (aux_standby())		puts("aux_standby\r\n");
-if (aux_back())			puts("aux_back\r\n");
+if (door_fully_closed())	puts("door_fully_closed\r\n");
 if (button_open())		puts("button_open\r\n");
 if (button_close()) 		puts("button_close\r\n");
 if (button_stop()) 		puts("button_stop\r\n");
 
 }
-
+/*
 	while(1) switch (state) {
 		// Initial state if door is not conclusively open or closed.
 		// Also entered in case of an error.
@@ -309,7 +309,7 @@ if (button_stop()) 		puts("button_stop\r\n");
 			main_motor_cw_open();
 			state = S_OPENING5;
 			break;
-/*
+
  		// The door is open enough to enable the main motor.
 		// Run the aux motor until SENSOR_AUX_STANDBY is reached.
 		// Run the main motor until SENSOR_DOOR_NEARLY_OPEN is reached.
@@ -368,9 +368,8 @@ if (button_stop()) 		puts("button_stop\r\n");
 				state = S_CLOSED;
 			}
 			break;
-*/
+
 		default:
-/*
 			if (main_motor_fault()) {
 				err = E_MAIN_MOTOR_FAULT;
 				state = S_STOP;
@@ -383,9 +382,8 @@ if (button_stop()) 		puts("button_stop\r\n");
 				err = E_TIMEOUT;
 				state = S_STOP;
 			}
-*/
 			handle_io(&state);
 			break;
-	}
+	} */
 }
 
