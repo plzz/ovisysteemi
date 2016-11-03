@@ -86,16 +86,14 @@ void init(void) {
 
 	// Timer
 
-	TCCR1A |= _BV(COM1B0)
-		| _BV(COM1B1)		// Set OC1B on Compare Match
-		| _BV(WGM11)
-		| _BV(WGM12);		// Fast PWM
-
-	TCCR1B |= _BV(CS12)		// CLKio/256
-		| _BV(WGM13);		// TOP = ICR1
-
-	ICR1 = MAIN_MOTOR_PWM_TOP;
 	OCR1B = 0;			// Initial motor speed 0 = 0%
+
+	TCCR1A |= _BV(COM1B1)		// Set OC1B on Compare Match
+		| _BV(WGM10);		// Fast PWM
+
+	TCCR1B |= _BV(CS11)		// CLKio/8
+		| _BV(WGM12);
+
 
 	TIMSK0 |=_BV(TOIE0);		// Enable timer 0 overflow interrupt
 	OCR0A = 99;			// Timer 0 compare value
