@@ -10,10 +10,17 @@
 // Configurable constants
 
 int const MAIN_MOTOR_PWM_TOP = 255;
-int const MAIN_MOTOR_MIN_SPEED = 30;
+int const MAIN_MOTOR_BRAKE_SPEED = 120;
+int const MAIN_MOTOR_MIN_SPEED = 150;
+int const MAIN_MOTOR_MED_SPEED = 254;
 int const MAIN_MOTOR_MAX_SPEED = 255;
 int const MAGNET_OPEN_WAIT = 5;		// 10ths of a second
 
+// Globals
+
+// Requested speed, used by ISR to accelerate
+volatile uint8_t main_motor_speed_request;
+volatile uint8_t main_motor_speed_unscaled;
 
 // Hardware abstraction layer
 
@@ -38,7 +45,7 @@ void init(void) {
 	      | _BV(DDC2)		// C2 Auxiliary motor enable (output)
 	      | _BV(DDC3)		// C3 Auxiliary motor direction (output)
 	      | _BV(DDC4)		// C4 Magnet enable (output)
-	      | _BV(DDC5);		// C5 unused relay (output)
+	      | _BV(DDC5);		// C5 Main PWM bypass (output)
 					// C6 reset, unused (input)
 
 	PORTC |= _BV(PC0) | _BV(PC1) | _BV(PC2) | _BV(PC3) | _BV(PC4) | _BV(PC5);
@@ -86,17 +93,17 @@ void init(void) {
 }
 
 void main_motor_stop() {
-	OCR1B = 0;			// Zero speed
-	PORTC |= _BV(PC0)		// Set direction
-		 | _BV(PC1);		// Set enable
+	main_motor_speed_request = 0;
 }
 
-void main_motor_cw_open() {
+void main_motor_cw_open(uint8_t speed) {
+	main_motor_speed_request = speed;
 	PORTC |= _BV(PC0);		// Set direction -> CW (open)
 	PORTC &= ~(_BV(PC1));		// Clear enable
 }
 
-void main_motor_ccw_close() {
+void main_motor_ccw_close(uint8_t speed) {
+	main_motor_speed_request = speed;
 	PORTC &= ~(_BV(PC0)		// Clear direction -> CCW (close)
 	         | _BV(PC1));		// Clear enable
 }
@@ -130,6 +137,14 @@ void magnet_on() {
 
 void magnet_off() {
 	PORTC |= _BV(PC4);
+}
+
+void main_motor_bypass_on() {
+	PORTC &= ~(_BV(PC5));
+}
+
+void main_motor_bypass_off() {
+	PORTC |= _BV(PC5);
 }
 
 bool door_nearly_open() {
@@ -192,34 +207,93 @@ enum state_t { S_STOP,
 	       S_CLOSING2,
 	       S_CLOSING3,
 	       S_CLOSING4,
-	       S_CLOSING5 };
+	       S_CLOSING5,
+	       S_CLOSING7,
+	       S_CLOSING8,
+	       S_CLOSING9 };
 
 enum err_t { E_NOERR = 0,
              E_TIMEOUT = 1,
              E_MAIN_MOTOR_FAULT = 2,
              E_AUX_MOTOR_FAULT = 3 };
 
-// These counters are all incremented by a timer interrupt every 100ms.
-volatile uint8_t s_opening1_counter;		// Delay counter for S_OPENING1
-volatile uint16_t movement_timeout_counter;	// Movement timeout
-volatile uint8_t main_motor_encoder_counter;
-volatile uint8_t aux_motor_encoder_counter;
-
 ISR(TIMER0_OVF_vect) {
 	TCNT0 = 0; // Zero the counter again.
 
-	if (++s_opening1_counter == 0) {
-		s_opening1_counter = 255;
+	if (++s_opening1_timer > 252) {
+		s_opening1_timer = 252;
 	}
+
+	if (++s_opening4_timer > 252) {
+		s_opening4_timer = 252;
+	}
+
+	if (++s_closing5_timer > 252) {
+		s_closing5_timer = 252;
+	}
+
+	if (++s_closing8_timer > 252) {
+		s_closing8_timer = 252;
+	}
+
 	if (++movement_timeout_counter == 0) {
 		movement_timeout_counter = 65535;
 	}
+
 	if (++main_motor_encoder_counter == 0) {
 		main_motor_encoder_counter = 255;
 	}
+
 	if (++aux_motor_encoder_counter == 0) {
 		aux_motor_encoder_counter = 255;
 	}
+
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+
+	if (main_motor_speed_unscaled && main_motor_speed_unscaled < 16)
+		set_main_motor_speed(16);
+	else
+		set_main_motor_speed(main_motor_speed_unscaled);
+
+	if (main_motor_speed_unscaled == 255)
+		main_motor_bypass_on();
+	else
+		main_motor_bypass_off();
+
+	if (main_motor_speed_unscaled == 0) {
+		OCR1B = 0;			// Zero speed
+		PORTC |= _BV(PC0)		// Set direction
+		       | _BV(PC1);		// Set enable
+	}
+
 }
 
 int uart_putchar(char c, FILE *stream) {
