@@ -18,6 +18,16 @@ int const MAGNET_OPEN_WAIT = 5;		// 10ths of a second
 
 // Globals
 
+// These counters are all incremented by a timer interrupt every 100ms.
+volatile uint8_t s_opening1_timer;		// Delay counter for S_OPENING1
+volatile uint8_t s_opening4_timer;
+volatile uint8_t s_closing5_timer;
+volatile uint8_t s_closing8_timer;
+
+volatile uint16_t movement_timeout_counter;	// Movement timeout
+volatile uint8_t main_motor_encoder_counter;
+volatile uint8_t aux_motor_encoder_counter;
+
 // Requested speed, used by ISR to accelerate
 volatile uint8_t main_motor_speed_request;
 volatile uint8_t main_motor_speed_unscaled;
@@ -30,13 +40,13 @@ void init(void) {
 					// B0 door_nearly_open (input)
 					// B1 door_fully_closed (input)
 	DDRB |= _BV(DDB2);		// B2 OC1B = main motor pwm (output)
-					// B3 button_open (input)
-					// B4 button_close (input)
+					// B3 sensor_proximity (input) (parallel with phys. open button)
+					// B4 button_openclose (input) (physically labeled: close)
 					// B5 button_stop (input)
 					// B6 XTAL1, unused (input)
 					// B7 XTAL2, unused (input)
 
-	PORTB |= _BV(PB3)		// B3 BUTTON_OPEN internal pull-up
+	PORTB |= _BV(PB3)		// B3 sensor_proximity
 	       | _BV(PB4)		// B4 BUTTON_CLOSE internal pull-up
 	       | _BV(PB5);		// B5 BUTTON_STOP internal pull-up
 
@@ -155,11 +165,11 @@ bool door_fully_closed() {
 	return PINB & _BV(PB1);
 }
 
-bool button_open() {
-	return !(PINB & _BV(PB3));
+bool sensor_proximity() {
+	return PINB & _BV(PB3);
 }
 
-bool button_close() {
+bool button_openclose() {
 	return !(PINB & _BV(PB4));
 }
 
@@ -392,11 +402,21 @@ if (button_stop()) 		puts("button_stop\r\n");
 		case S_OPENING5:
 			if (aux_standby()) {
 				aux_motor_stop();
-			}
-			if (door_nearly_open()) {
-				main_motor_decelerate();
-			}
-			if (door_open()) {
+				if (button_openclose()) {
+					_delay_ms(20);
+					if (button_openclose()) {
+						if (door_fully_open()) state = S_CLOSING1;
+						if (door_fully_closed()) state = S_OPENING1;
+					}
+				}
+				break;
+	
+			// Door is fully open. Motors stopped, magnet off.
+			case S_OPEN:
+				if (button_openclose()) {
+					_delay_ms(20);
+					if (button_openclose()) state = S_CLOSING1;
+				}
 				main_motor_stop();
 				aux_motor_stop();
 				state = S_OPEN;
