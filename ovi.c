@@ -504,10 +504,6 @@ int main (void)
 		handle_io(&state); */
 		if (button_stop()) { _delay_ms(20); if (button_stop()) state = S_STOP; }
 
-		if (sensor_proximity()) {
-			_delay_ms(20);
-			if (sensor_proximity()) state = S_STOP;
-		}
 	}
 }
 
