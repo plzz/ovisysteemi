@@ -58,14 +58,15 @@ void init(void) {
 	      | _BV(DDC5);		// C5 Main PWM bypass (output)
 					// C6 reset, unused (input)
 
+	// Initialize as high (off)
 	PORTC |= _BV(PC0) | _BV(PC1) | _BV(PC2) | _BV(PC3) | _BV(PC4) | _BV(PC5);
 
 					// D0 RS232 RX (input)
 	DDRD |= _BV(DDD1);		// D1 RS232 TX (output)
 					// D2 door_fully_open (input)
 					// D3 main_encoder (input)
-					// D4 aux_inner_limit (input)
-					// D5 aux_outer_limit (input)
+					// D4 aux_outdoor_limit (input)
+					// D5 aux_indoor_limit (input)
 					// D6 door_nearly_closed (input)
 					// D7 aux_encoder (input)
 
@@ -185,11 +186,11 @@ bool main_encoder() {
 	return PIND & _BV(PD3);
 }
 
-bool aux_inner_limit() {
+bool aux_outdoor_limit() {
 	return PIND & _BV(PD4);
 }
 
-bool aux_outer_limit() {
+bool aux_indoor_limit() {
 	return PIND & _BV(PD5);
 }
 
@@ -331,76 +332,17 @@ int main (void)
 	enum state_t state = S_STOP;
 	enum err_t err = E_NOERR;
 
-	while (1) {
-if (door_fully_open())		puts("door_fully_open\r\n");
-if (aux_inner_limit())		puts("aux_inner_limit\r\n");
-if (aux_outer_limit())		puts("aux_outer_limit\r\n");
-if (door_nearly_closed())	puts("door_nearly_closed\r\n");
-if (door_nearly_open())		puts("door_nearly_open\r\n");
-if (door_fully_closed())	puts("door_fully_closed\r\n");
-if (button_open())		puts("button_open\r\n");
-if (button_close()) 		puts("button_close\r\n");
-if (button_stop()) 		puts("button_stop\r\n");
+	_delay_ms(1000);
 
-}
-/*
-	while(1) switch (state) {
-		// Initial state if door is not conclusively open or closed.
-		// Also entered in case of an error.
-		case S_STOP:
-			main_motor_stop();
-			aux_motor_stop();
-			break;
+	if (door_fully_closed()) state = S_CLOSED;
+	else if (door_fully_open()) state = S_OPEN;
 
-		// Door is fully open. Motors stopped, magnet off.
-		case S_OPEN:
-			main_motor_stop();
-			aux_motor_stop();
-			magnet_off();
-			break;
-
-		// Door is fully open. Motors stopped, magnet on.
-		case S_CLOSED:
-			main_motor_stop();
-			aux_motor_stop();
-			magnet_on();
-			break;
-
-		// Open magnets, clear timer
-		case S_OPENING1:
-			magnet_off();
-			s_opening1_counter = 0;
-			state = S_OPENING2;
-			break;
-
-		// Wait
-		case S_OPENING2:
-			if (s_opening1_counter == MAGNET_OPEN_WAIT) {
-				state = S_OPENING3;
-			}
-			break;
-
-		// Start the auxiliary motor to open the middle of the door.
-		// Wait until SENSOR_DOOR_CLOSED opens.
-		case S_OPENING3:
-			aux_motor_ccw_open();
-			if (door_closed() == 0) {
-				state = S_OPENING4;
-			}
-			break;
-
-		// Start accelerating the main motor.
-		case S_OPENING4:
-			set_main_motor_speed(MAIN_MOTOR_MIN_SPEED);
-			main_motor_cw_open();
-			state = S_OPENING5;
-			break;
-
- 		// The door is open enough to enable the main motor.
-		// Run the aux motor until SENSOR_AUX_STANDBY is reached.
-		// Run the main motor until SENSOR_DOOR_NEARLY_OPEN is reached.
-		case S_OPENING5:
-			if (aux_standby()) {
+	while(1) {
+		switch (state) {
+			// Initial state if door is not conclusively open or closed.
+			// Also entered in case of an error.
+			case S_STOP:
+				main_motor_stop();
 				aux_motor_stop();
 				if (button_openclose()) {
 					_delay_ms(20);
@@ -419,67 +361,155 @@ if (button_stop()) 		puts("button_stop\r\n");
 				}
 				main_motor_stop();
 				aux_motor_stop();
-				state = S_OPEN;
-			}
-			break;
-
-		// Start main motor
-		case S_CLOSING1:
-			main_motor_speed(MAIN_MOTOR_MIN_SPEED);
-			main_motor_ccw_close();
-			state = S_CLOSING2;
-			break;
-
-		// Run until SENSOR_DOOR_NEARLY_OPEN is reached, then
-		// accelerate
-		case S_CLOSING2:
-			if (door_nearly_open() == 1) {
-				main_motor_speed(MAIN_MOTOR_MAX_SPEED);
-				state = S_CLOSING3;
-			}
-			break;
-
-		// Wait until SENSOR_AUX_BACK is reached. Then slow down main
-		// motor to minimum speed and start auxiliary motor.
-		case S_CLOSING3:
-			if (aux_back()) {
-				aux_motor_cw_close();
-				main_motor_speed(MAIN_MOTOR_MIN_SPEED);
-				state = S_CLOSING4;
-			}
-			break;
-
-		case S_CLOSING4:
-			magnet_on();
-			if (door_closed()) {
-				main_motor_off();
+				magnet_off();
+				break;
+	
+			// Door is fully closed. Motors stopped, magnet on.
+			case S_CLOSED:
+				if (button_openclose()) {
+					_delay_ms(20);
+					if (button_openclose()) state = S_OPENING1;
+				}
+				main_motor_stop();
+				aux_motor_stop();
+				magnet_on();
+				break;
+	
+			// Open magnets, clear timer
+			case S_OPENING1:
+				magnet_off();
+				s_opening1_timer = 0;
+				state = S_OPENING2;
+				break;
+	
+			// Wait
+			case S_OPENING2:
+				if (s_opening1_timer > MAGNET_OPEN_WAIT) {
+					state = S_OPENING3;
+				}
+				break;
+	
+			// Start the auxiliary motor to open the middle of the door.
+			// Wait until door_fully_closed opens.
+			case S_OPENING3:
 				aux_motor_ccw_open();
-				state = S_CLOSING5;
-			}
-			break;
+				main_motor_cw_open(MAIN_MOTOR_MED_SPEED);
+				if (door_nearly_closed()) {
+					state = S_OPENING4;
+					s_opening4_timer = 0;
+				}
+				break;
+	
+			// Start accelerating the main motor.
+			case S_OPENING4:
+				if (s_opening4_timer > 30) {
+					main_motor_cw_open(MAIN_MOTOR_MAX_SPEED);
+					state = S_OPENING5;
+				}
+				break;
+	
+			// The door is open enough to enable the main motor.
+			// Run the aux motor until aux_indoor_limit is reached.
+			// Run the main motor at full speed until door_nearly_open is reached.
+			case S_OPENING5:
+				if (aux_indoor_limit()) {
+					aux_motor_stop();
+					if (door_fully_open()) state = S_OPEN;
+				}
+				if (door_nearly_open()) {
+					main_motor_cw_open(MAIN_MOTOR_BRAKE_SPEED);
+				}
+				if (door_fully_open()) {
+					main_motor_stop();
+				}
+				break;
 
-		case S_CLOSING5:
-			if (aux_front()) {
-				aux_motor_off();
-				state = S_CLOSED;
-			}
-			break;
+			case S_CLOSING1:
+				if (aux_indoor_limit()) {
+					aux_motor_stop();
+					state = S_CLOSING2;
+				} else {
+					aux_motor_cw_close();
+				}
+				break;
 
-		default:
-			if (main_motor_fault()) {
-				err = E_MAIN_MOTOR_FAULT;
-				state = S_STOP;
-			}
-			if (aux_motor_fault()) {
-				err = E_AUX_MOTOR_FAULT;
-				state = S_STOP;
-			}
-			if (timeout()) {
-				err = E_TIMEOUT;
-				state = S_STOP;
-			}
-			handle_io(&state);
-			break;
-	} */
+			// Start main motor
+			case S_CLOSING2:
+				main_motor_ccw_close(MAIN_MOTOR_MED_SPEED);
+				state = S_CLOSING3;
+				break;
+	
+			// Run until door_nearly_open is reached, then
+			// accelerate
+			case S_CLOSING3:
+				if (door_nearly_open() == 1) {
+					main_motor_ccw_close(MAIN_MOTOR_MAX_SPEED);
+					state = S_CLOSING4;
+				}
+				break;
+
+			// Wait until door_nearly_closed is reached.
+			case S_CLOSING4:
+				if (door_nearly_closed()) {
+					s_closing5_timer = 0;
+					state = S_CLOSING5;
+				}
+				break;
+
+			// Wait until timeout, then slow down main motor to
+			// minimum speed and start auxiliary motor.
+			case S_CLOSING5:
+				if (s_closing5_timer > 15) {
+					aux_motor_cw_close();
+					main_motor_ccw_close(MAIN_MOTOR_MIN_SPEED);
+					state = S_CLOSING7;
+				}
+				break;
+	
+			case S_CLOSING7:
+				if (door_fully_closed()) {
+					magnet_on();
+					s_closing8_timer = 0;
+					state = S_CLOSING8;
+				}
+				break;
+	
+			case S_CLOSING8:
+				if (s_closing8_timer > 75) {
+					main_motor_stop();
+					aux_motor_ccw_open();
+					state = S_CLOSING9;
+				}
+				break;
+	
+			case S_CLOSING9:
+				if (aux_outdoor_limit()) {
+					aux_motor_stop();
+					state = S_CLOSED;
+				}
+				break;
+	
+		}
+		/* if (main_motor_fault()) {
+			err = E_MAIN_MOTOR_FAULT;
+			state = S_STOP;
+		}
+		if (aux_motor_fault()) {
+			err = E_AUX_MOTOR_FAULT;
+			state = S_STOP;
+		}
+		if (timeout()) {
+			err = E_TIMEOUT;
+			state = S_STOP;
+		}
+	
+		handle_io(&state); */
+		if (button_stop()) { _delay_ms(20); if (button_stop()) state = S_STOP; }
+
+		if (sensor_proximity()) {
+			_delay_ms(20);
+			if (sensor_proximity()) state = S_STOP;
+		}
+	}
 }
 
