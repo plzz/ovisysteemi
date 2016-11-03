@@ -425,32 +425,47 @@ int main (void)
 			case S_CLOSING1:
 				if (aux_indoor_limit()) {
 					aux_motor_stop();
-					state = S_CLOSING2;
+					state = S_CLOSING3;
 				} else {
 					aux_motor_cw_close();
 				}
 				break;
 
-			// Start main motor
-			case S_CLOSING2:
-				main_motor_ccw_close(MAIN_MOTOR_MED_SPEED);
-				state = S_CLOSING3;
-				break;
-	
-			// Run until door_nearly_open is reached, then
-			// accelerate
+			// Run at max speed until door_nearly_open is reached
 			case S_CLOSING3:
-				if (door_nearly_open() == 1) {
+				if (sensor_proximity()) {
+					_delay_ms(1);
+		                        if (sensor_proximity()) main_motor_stop();
+					_delay_ms(1000);
+				} else if (!door_nearly_open()) {
+					main_motor_ccw_close(MAIN_MOTOR_MED_SPEED);
+				} else {
 					main_motor_ccw_close(MAIN_MOTOR_MAX_SPEED);
 					state = S_CLOSING4;
 				}
+
+				// Skip to S_CLOSING5 if we somehow already reach door_nearly_closed
+				if (door_nearly_closed()) {
+                                        s_closing5_timer = 0;
+                                        state = S_CLOSING5;
+                                }
+				// Skip to S_CLOSING9 if we somehow already reached door_fully_closed
+				if (door_fully_closed()) {
+                                        state = S_CLOSING9;
+                                }
 				break;
 
 			// Wait until door_nearly_closed is reached.
 			case S_CLOSING4:
-				if (door_nearly_closed()) {
+				if (sensor_proximity()) {
+					_delay_ms(1);
+					if (sensor_proximity()) main_motor_stop();
+					_delay_ms(1000);
+				} else if (door_nearly_closed()) {
 					s_closing5_timer = 0;
 					state = S_CLOSING5;
+				} else {
+					main_motor_ccw_close(MAIN_MOTOR_MAX_SPEED);
 				}
 				break;
 
@@ -458,24 +473,33 @@ int main (void)
 			// minimum speed and start auxiliary motor.
 			case S_CLOSING5:
 				if (s_closing5_timer > 15) {
-					aux_motor_cw_close();
-					main_motor_ccw_close(MAIN_MOTOR_MIN_SPEED);
 					state = S_CLOSING7;
+				} else {
+					main_motor_ccw_close(MAIN_MOTOR_MAX_SPEED);
 				}
 				break;
 	
 			case S_CLOSING7:
-				if (door_fully_closed()) {
+				if (sensor_proximity()) {
+					_delay_ms(1);
+					if (sensor_proximity()) {
+						main_motor_stop();
+						aux_motor_stop();
+					}
+					_delay_ms(1000);
+				} else if (door_fully_closed()) {
 					magnet_on();
 					s_closing8_timer = 0;
 					state = S_CLOSING8;
+				} else {
+					aux_motor_cw_close();
+					main_motor_ccw_close(MAIN_MOTOR_MIN_SPEED);
 				}
 				break;
 	
 			case S_CLOSING8:
 				if (s_closing8_timer > 75) {
 					main_motor_stop();
-					aux_motor_ccw_open();
 					state = S_CLOSING9;
 				}
 				break;
@@ -484,6 +508,8 @@ int main (void)
 				if (aux_outdoor_limit()) {
 					aux_motor_stop();
 					state = S_CLOSED;
+				} else {
+					aux_motor_ccw_open();
 				}
 				break;
 	
