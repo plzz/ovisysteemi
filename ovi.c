@@ -400,7 +400,7 @@ int main (void)
 	
 			// Start accelerating the main motor.
 			case S_OPENING4:
-				if (s_opening4_timer > 30) {
+				if (s_opening4_timer > 50) {
 					main_motor_cw_open(MAIN_MOTOR_MAX_SPEED);
 					state = S_OPENING5;
 				}
