@@ -141,11 +141,11 @@ void aux_motor_ccw_open() {
 	         | _BV(PC2));		// Set enable
 }
 
-void magnet_on() {
+void magnet_off() {
 	PORTC &= ~(_BV(PC4));
 }
 
-void magnet_off() {
+void magnet_on() {
 	PORTC |= _BV(PC4);
 }
 
