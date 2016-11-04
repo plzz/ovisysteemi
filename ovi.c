@@ -1,4 +1,4 @@
-#define BAUD 9600
+#define BAUD 1200
 
 #include <avr/interrupt.h>
 #include <avr/io.h>
@@ -23,6 +23,8 @@ volatile uint8_t s_opening1_timer;		// Delay counter for S_OPENING1
 volatile uint8_t s_opening4_timer;
 volatile uint8_t s_closing5_timer;
 volatile uint8_t s_closing8_timer;
+
+volatile uint8_t status_dump_timer;
 
 volatile uint16_t movement_timeout_counter;	// Movement timeout
 volatile uint8_t main_motor_encoder_counter;
@@ -245,6 +247,10 @@ ISR(TIMER0_OVF_vect) {
 		s_closing8_timer = 252;
 	}
 
+	if (++status_dump_timer  > 252) {
+                status_dump_timer = 252;
+	}
+
 	if (++movement_timeout_counter == 0) {
 		movement_timeout_counter = 65535;
 	}
@@ -319,6 +325,22 @@ int uart_getchar(FILE *stream) {
 FILE uart_io = FDEV_SETUP_STREAM(uart_putchar, uart_getchar, _FDEV_SETUP_RW);
 
 void handle_io(enum state_t *state) {
+	if (status_dump_timer == 252) {
+		status_dump_timer = 0;
+		printf ("%%STATE:");
+		if (door_fully_open())		printf(" door_fully_open");
+		if (door_fully_closed())	printf(" door_fully_closed");
+		if (sensor_proximity())		printf(" sensor_proximity");
+		if (button_openclose())		printf(" button_openclose");
+		if (button_stop())		printf(" button_stop");
+		if (door_fully_open())		printf(" door_fully_open");
+		if (aux_outdoor_limit())	printf(" aux_outdoor_limit");
+		if (aux_indoor_limit())		printf(" aux_indoor_limit()");
+		if (door_nearly_closed())	printf(" door_nearly_closed");
+
+		printf( " state=%d", *state);
+		printf("\r\n");
+	}
 }
 
 int main (void)
@@ -525,9 +547,9 @@ int main (void)
 		if (timeout()) {
 			err = E_TIMEOUT;
 			state = S_STOP;
-		}
+		} */
 	
-		handle_io(&state); */
+		handle_io(&state);
 		if (button_stop()) { _delay_ms(20); if (button_stop()) state = S_STOP; }
 
 	}
