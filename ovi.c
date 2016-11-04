@@ -1,4 +1,4 @@
-#define BAUD 1200
+#define BAUD 57600
 
 #include <avr/interrupt.h>
 #include <avr/io.h>
