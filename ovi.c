@@ -322,6 +322,14 @@ int uart_getchar(FILE *stream) {
 	return UDR0;
 }
 
+int uart_getchar_nonblock() {
+	if (UCSR0A & _BV(RXC0)) {
+		return UDR0;
+	} else {
+		return EOF;
+	}
+}
+
 FILE uart_io = FDEV_SETUP_STREAM(uart_putchar, uart_getchar, _FDEV_SETUP_RW);
 
 void handle_io(enum state_t *state) {
@@ -340,6 +348,34 @@ void handle_io(enum state_t *state) {
 
 		printf( " state=%d", *state);
 		printf("\r\n");
+	}
+
+	switch (uart_getchar_nonblock()) {
+	case 'o':
+		if (*state == S_CLOSED) *state = S_OPENING1;
+		break;
+
+	case 'c':
+		if (*state == S_OPEN) *state = S_CLOSING1;
+		break;
+
+	case 's':
+		*state = S_STOP;
+		break;
+
+	case 'z': // aux open
+		break;
+
+	case 'x': // aux close
+		break;
+
+	case 'v': // main open
+		break;
+
+	case 'b': // main close
+		break;
+
+
 	}
 }
 
