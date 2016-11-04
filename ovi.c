@@ -215,7 +215,6 @@ enum state_t { S_STOP,
 	       S_OPENING5,
 
 	       S_CLOSING1,
-	       S_CLOSING2,
 	       S_CLOSING3,
 	       S_CLOSING4,
 	       S_CLOSING5,
