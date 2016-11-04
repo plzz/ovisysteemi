@@ -165,7 +165,7 @@ bool door_fully_closed() {
 }
 
 bool sensor_proximity() {
-	return PINB & _BV(PB3);
+	return !(PINB & _BV(PB3));
 }
 
 bool button_openclose() {
