@@ -340,7 +340,6 @@ void handle_io(enum state_t *state) {
 		if (sensor_proximity())		printf(" sensor_proximity");
 		if (button_openclose())		printf(" button_openclose");
 		if (button_stop())		printf(" button_stop");
-		if (door_fully_open())		printf(" door_fully_open");
 		if (aux_outdoor_limit())	printf(" aux_outdoor_limit");
 		if (aux_indoor_limit())		printf(" aux_indoor_limit()");
 		if (door_nearly_closed())	printf(" door_nearly_closed");
