@@ -213,6 +213,7 @@ enum state_t { S_STOP,
 	       S_OPENING3,
 	       S_OPENING4,
 	       S_OPENING5,
+	       S_OPENING6,
 
 	       S_CLOSING1,
 	       S_CLOSING3,
@@ -471,7 +472,6 @@ int main (void)
 			// Start accelerating the main motor.
 			case S_OPENING4:
 				if (s_opening4_timer > 50) {
-					main_motor_cw_open(MAIN_MOTOR_MAX_SPEED);
 					state = S_OPENING5;
 				}
 				break;
@@ -482,14 +482,35 @@ int main (void)
 			case S_OPENING5:
 				if (aux_indoor_limit()) {
 					aux_motor_stop();
-					if (door_fully_open()) state = S_OPEN;
+				} else {
+					aux_motor_ccw_open();
 				}
 				if (door_nearly_open()) {
 					main_motor_cw_open(MAIN_MOTOR_BRAKE_SPEED);
+					state = S_OPENING6;
+				} else if (door_fully_open()) {
+					main_motor_stop();
+					state = S_OPENING6;
+				} else {
+					main_motor_cw_open(MAIN_MOTOR_MAX_SPEED);
+				}
+				break;
+
+			case S_OPENING6:
+				if (aux_indoor_limit()) {
+					aux_motor_stop();
+				} else {
+					aux_motor_ccw_open();
 				}
 				if (door_fully_open()) {
 					main_motor_stop();
+				} else {
+					main_motor_cw_open(MAIN_MOTOR_BRAKE_SPEED);
 				}
+
+				if (aux_indoor_limit() && door_fully_open())
+					state = S_OPEN;
+
 				break;
 
 			case S_CLOSING1:
