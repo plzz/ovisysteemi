@@ -350,11 +350,13 @@ void handle_io(enum state_t *state) {
 
 	switch (uart_getchar_nonblock()) {
 	case 'o':
-		if (*state == S_CLOSED) *state = S_OPENING1;
+		if ((*state == S_CLOSED) || (*state == S_STOP))
+			if (door_fully_closed()) *state = S_OPENING1;
 		break;
 
 	case 'c':
-		if (*state == S_OPEN) *state = S_CLOSING1;
+		if ((*state == S_OPEN) || (*state == S_STOP))
+			if (door_fully_open()) *state = S_CLOSING1;
 		break;
 
 	case 's':
@@ -362,15 +364,27 @@ void handle_io(enum state_t *state) {
 		break;
 
 	case 'z': // aux open
+		aux_motor_ccw_open();
+		_delay_ms(250);
+		aux_motor_stop();
 		break;
 
 	case 'x': // aux close
+		aux_motor_cw_close();
+		_delay_ms(250);
+		aux_motor_stop();
 		break;
 
 	case 'v': // main open
+		main_motor_cw_open(254);
+		_delay_ms(250);
+		main_motor_stop();
 		break;
 
 	case 'b': // main close
+		main_motor_ccw_close(254);
+		_delay_ms(250);
+		main_motor_stop();
 		break;
 
 
