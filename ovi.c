@@ -471,7 +471,12 @@ int main (void)
 	
 			// Unused
 			case S_OPENING4:
-				state = S_OPENING5;
+				if (s_opening4_timer > 50) {
+					state = S_OPENING5;
+				} else {
+					aux_motor_stop();
+					main_motor_cw_open(MAIN_MOTOR_MED_SPEED);
+				}
 				break;
 	
 			// The door is open enough to enable the main motor.
