@@ -469,11 +469,9 @@ int main (void)
 				}
 				break;
 	
-			// Start accelerating the main motor.
+			// Unused
 			case S_OPENING4:
-				if (s_opening4_timer > 50) {
-					state = S_OPENING5;
-				}
+				state = S_OPENING5;
 				break;
 	
 			// The door is open enough to enable the main motor.
@@ -492,7 +490,11 @@ int main (void)
 					main_motor_stop();
 					state = S_OPENING6;
 				} else {
-					main_motor_cw_open(MAIN_MOTOR_MAX_SPEED);
+					if (aux_indoor_limit()) {
+						main_motor_cw_open(MAIN_MOTOR_MAX_SPEED);
+					} else {
+						main_motor_cw_open(MAIN_MOTOR_MED_SPEED);
+					}
 				}
 				break;
 
