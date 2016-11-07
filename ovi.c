@@ -459,7 +459,7 @@ int main (void)
 				break;
 	
 			// Start the auxiliary motor to open the middle of the door.
-			// Wait until door_fully_closed opens.
+			// Wait until door_nearly_closed opens.
 			case S_OPENING3:
 				aux_motor_ccw_open();
 				main_motor_cw_open(MAIN_MOTOR_MED_SPEED);
