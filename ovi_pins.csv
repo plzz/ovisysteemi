@@ -1,22 +1,33 @@
-Arduino,LED,AVR,Tyyppi,Selostus,Tasot,,Nimi
-0,,PD0,Digital input,RS-232 RXD,0V = RS-232 +12V,5V = RS-232 -12V,
-1,,PD1,Digital output,RS-232 TXD,0V = RS-232 +12V,5V = RS-232 -12V,
-2,8,PD2,Digital input,Anturi 8,0V=ei kohdalla,5V=kohdalla,door_fully_open
-3,7,PD3,Digital input,Anturi 7,Päämoottorin pulssilaskuri,min. X pulssia/s,main_encoder
-4,6,PD4,Digital input,Anturi 6,0V=ei kohdalla,5V=kohdalla,aux_inner_limit
-5,5,PD5,Digital input,Anturi 5,0V=ei kohdalla,5V=kohdalla,aux_outer_limit
-6,4,PD6,Digital input,Anturi 4,0V=ei kohdalla,5V=kohdalla,door_nearly_closed
-7,3,PD7,Digital input,Anturi 3,Apumoottorin pulssilaskuri,min. X pulssia/s,aux_encoder
-8,2,PB0,Digital input,Anturi 2,0V=ei kohdalla,5V=kohdalla,door_nearly_open
-9,1,PB1,Digital input,Anturi 1,0V=ei kohdalla,5V=kohdalla,door_fully_closed
-10,,PB2/OC1B,PWM output,Päämoottorin nopeus,0V=100%,5V=0%,
-11,,PB3,Digital input with pull-up,Oviaukon lähestymistunnistin,0V=esine tunnistettu,5V=ei tunnistettu,sensor_proximity
-12,,PB4,Digital input with pull-up,Kiinni-auki-nappi,0V=painettu,5V=ei painettu,button_openclose
-13,,PB5,Digital input with pull-up,Seis-nappi,0V=ei painettu,5V=painettu,button_stop
-A0,,PC0,Digital output,Päämoottorin suunta,5V=CW (auki),0V=CCW (kiinni),
-A1,,PC1,Digital output,Päämoottorin virta,5V=pois,0V=päällä,
-A2,,PC2,Digital output,Apumoottorin virta,5V=pois,0V=päällä,
-A3,,PC3,Digital output,Apumoottorin suunta,5V=CW (kiinni),0V=CCW (auki),
-A4,,PC4,Digital output,Sähkömagneetit,5V=päällä (lukossa),0V=pois (vapaa),magnet
-A5,,PC5,Digital output,Päämoottorin ohjaimen ohitusrele,5V=pois,0V=päällä,main_motor_bypass
-N/A,N/A,N/A,Digital output,Ovi auki -tilatietorele,5V=pois,0V=päällä,door_open_relay
+Levy,AVR,Tyyppi,Selostus,Tasot,,Nimi
+D9 pin 3,PD2,Digital input,RS-232 RXD,0V = RS-232 +12V,5V = RS-232 -12V,
+D9 pin 2,PD3,Digital output,RS-232 TXD,0V = RS-232 +12V,5V = RS-232 -12V,
+D9 pin 7 or 4,PD5,Digital input,RS-232 DTR or RTS,0V = RS-232 +12V,5V = RS-232 -12V,
+D9 pin 8,PD4,Digital output,RS-232 CTS,0V = RS-232 +12V,5V = RS-232 -12V,
+N/A,PA6,Digital input,Vapaana opton vieressä olevat padit,,,
+I9,PA7,Digital input,Vapaana,,,
+I8,PG2,Digital input,Anturi 8,0V=ei kohdalla,5V=kohdalla,door_fully_open
+I7,PC7,Digital input,Anturi 7,Päämoottorin pulssilaskuri,min. X pulssia/s,main_encoder
+I6,PC6,Digital input,Anturi 6,0V=ei kohdalla,5V=kohdalla,aux_inner_limit
+I5,PC5,Digital input,Anturi 5,0V=ei kohdalla,5V=kohdalla,aux_outer_limit
+I4,PC4,Digital input,Anturi 4,0V=ei kohdalla,5V=kohdalla,door_nearly_closed
+I3,PC3,Digital input,Anturi 3,Apumoottorin pulssilaskuri,min. X pulssia/s,aux_encoder
+I2,PC2,Digital input,Anturi 2,0V=ei kohdalla,5V=kohdalla,door_nearly_open
+I1,PC1,Digital input,Anturi 1,0V=ei kohdalla,5V=kohdalla,door_fully_closed
+MOTOR1,N/A,Motor Driver,Päämoottori,,
+MOTOR2,N/A,Motor Driver,Apumoottori,,
+I10,PA0,Digital input,Oviaukon lähestymistunnistin,0V=esine tunnistettu,5V=ei tunnistettu,sensor_proximity
+I11,PA1,Digital input,Kiinni-auki-nappi,0V=painettu,5V=ei painettu,button_openclose
+I12,PA2,Digital input,Seis-nappi,0V=ei painettu,5V=painettu,button_stop
+I13,PA3,Digital input,Vapaana,,,
+I14,PA4,Digital input,Vapaana,,,
+I15,PA5,Digital input,Vapaana,,,
+FETOUT1,PB5,Digital output,Sähkömagneetit,5V=päällä (lukossa),0V=pois (vapaa),magnet
+FETOUT2,PB6,Digital output,Vapaana,,,
+FETOUT3,PG3,Digital output,Vapaana,,,
+FETOUT4,PG4,Digital output,Vapaana,,,
+R1,PD7,Digital output,Ovi auki -tilatietorele,5V=päällä,0V=pois,door_open_relay
+R2,PD6,Digital output,Vapaa relelähtö,5V=päällä,0V=pois,
+R3,PD0,Digital output,Vapaa relelähtö,5V=päällä,0V=pois,
+R4,PD1,Digital output,Vapaa relelähtö,5V=päällä,0V=pois,
+R5,PG0,Digital output,Vapaa relelähtö,5V=päällä,0V=pois,
+R6,PG1,Digital output,Vapaa relelähtö,5V=päällä,0V=pois,
