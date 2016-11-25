@@ -13,8 +13,8 @@ I4,PC4,Digital input,Anturi 4,0V=ei kohdalla,5V=kohdalla,door_nearly_closed
 I3,PC3,Digital input,Anturi 3,Apumoottorin pulssilaskuri,min. X pulssia/s,aux_encoder
 I2,PC2,Digital input,Anturi 2,0V=ei kohdalla,5V=kohdalla,door_nearly_open
 I1,PC1,Digital input,Anturi 1,0V=ei kohdalla,5V=kohdalla,door_fully_closed
-MOTOR1,N/A,Motor Driver,Päämoottori,,
-MOTOR2,N/A,Motor Driver,Apumoottori,,
+MOTOR1,N/A,Motor Driver,Päämoottori,,,
+MOTOR2,N/A,Motor Driver,Apumoottori,,,
 I10,PA0,Digital input,Oviaukon lähestymistunnistin,0V=esine tunnistettu,5V=ei tunnistettu,sensor_proximity
 I11,PA1,Digital input,Kiinni-auki-nappi,0V=painettu,5V=ei painettu,button_openclose
 I12,PA2,Digital input,Seis-nappi,0V=ei painettu,5V=painettu,button_stop
