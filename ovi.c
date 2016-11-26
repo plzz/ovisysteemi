@@ -1,11 +1,10 @@
-#define BAUD 57600
-
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <util/delay.h>
-#include <util/setbaud.h>
+
+#include "hal1.h"
 
 // Globals
 

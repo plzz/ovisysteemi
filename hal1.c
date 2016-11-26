@@ -1,3 +1,14 @@
+#define BAUD 57600
+
+#include <avr/interrupt.h>
+#include <avr/io.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <util/delay.h>
+#include <util/setbaud.h>
+
+#include "hal1.h"
+
 int const MAIN_MOTOR_PWM_TOP = 255;
 int const MAIN_MOTOR_BRAKE_SPEED = 120;
 int const MAIN_MOTOR_MIN_SPEED = 150;
