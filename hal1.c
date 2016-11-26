@@ -1,5 +1,11 @@
 // Hardware abstraction layer
 
+// Globals
+
+// Requested speed, used by ISR to accelerate
+static volatile uint8_t main_motor_speed_request;
+static volatile uint8_t main_motor_speed_unscaled;
+
 void init(void) {
 	// DDR and pull-ups
 

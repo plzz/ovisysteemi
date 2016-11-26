@@ -21,10 +21,6 @@ volatile uint16_t movement_timeout_counter;	// Movement timeout
 volatile uint8_t main_motor_encoder_counter;
 volatile uint8_t aux_motor_encoder_counter;
 
-// Requested speed, used by ISR to accelerate
-volatile uint8_t main_motor_speed_request;
-volatile uint8_t main_motor_speed_unscaled;
-
 // Main state machine
 
 enum state_t { S_STOP,
