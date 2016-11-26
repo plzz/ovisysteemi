@@ -10,6 +10,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "hal2.h"
+#include "ovi.h"
+
 // Mechanical constants
 int const MAIN_MOTOR_PWM_TOP = 255;
 int const MAIN_MOTOR_BRAKE_SPEED = 120;
@@ -107,6 +110,8 @@ ISR(INT6_vect)
 
 ISR(TIMER0_OVF_vect)
 {
+	static uint8_t ovi_callback_cnt;
+
 	if(overcurrent_pending[0])
 	{
 		overcurrent_pending[0]--;
@@ -156,7 +161,9 @@ ISR(TIMER0_OVF_vect)
 
 		PWM_2 = tmp;
 	}
-
+	if (ovi_callback_cnt++ == 255) {
+		ovi_timer_callback();
+	}
 }
 
 // Do not touch these, they are constrained by HW.
