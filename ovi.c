@@ -81,47 +81,6 @@ ISR(TIMER0_OVF_vect) {
 	if (++aux_motor_encoder_counter == 0) {
 		aux_motor_encoder_counter = 255;
 	}
-
-	if (main_motor_speed_request > main_motor_speed_unscaled)
-		main_motor_speed_unscaled++;
-	if (main_motor_speed_request > main_motor_speed_unscaled)
-		main_motor_speed_unscaled++;
-	if (main_motor_speed_request > main_motor_speed_unscaled)
-		main_motor_speed_unscaled++;
-	if (main_motor_speed_request > main_motor_speed_unscaled)
-		main_motor_speed_unscaled++;
-	if (main_motor_speed_request > main_motor_speed_unscaled)
-		main_motor_speed_unscaled++;
-	if (main_motor_speed_request > main_motor_speed_unscaled)
-		main_motor_speed_unscaled++;
-	if (main_motor_speed_request > main_motor_speed_unscaled)
-		main_motor_speed_unscaled++;
-
-	if (main_motor_speed_request < main_motor_speed_unscaled)
-		main_motor_speed_unscaled--;
-	if (main_motor_speed_request < main_motor_speed_unscaled)
-		main_motor_speed_unscaled--;
-	if (main_motor_speed_request < main_motor_speed_unscaled)
-		main_motor_speed_unscaled--;
-	if (main_motor_speed_request < main_motor_speed_unscaled)
-		main_motor_speed_unscaled--;
-	if (main_motor_speed_request < main_motor_speed_unscaled)
-		main_motor_speed_unscaled--;
-	if (main_motor_speed_request < main_motor_speed_unscaled)
-		main_motor_speed_unscaled--;
-	if (main_motor_speed_request < main_motor_speed_unscaled)
-		main_motor_speed_unscaled--;
-
-	if (main_motor_speed_unscaled && main_motor_speed_unscaled < 16)
-		set_main_motor_speed(16);
-	else
-		set_main_motor_speed(main_motor_speed_unscaled);
-
-	if (main_motor_speed_unscaled == 0) {
-		OCR1B = 0;			// Zero speed
-		PORTC |= _BV(PC0)		// Set direction
-		       | _BV(PC1);		// Set enable
-	}
 }
 
 int uart_putchar(char c, FILE *stream) {

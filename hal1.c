@@ -73,6 +73,50 @@ void init(void) {
 	sei();				// Enable interrupts
 }
 
+ISR(TIMER0_OVF_vect) {
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+	if (main_motor_speed_request > main_motor_speed_unscaled)
+		main_motor_speed_unscaled++;
+
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+	if (main_motor_speed_request < main_motor_speed_unscaled)
+		main_motor_speed_unscaled--;
+
+	if (main_motor_speed_unscaled && main_motor_speed_unscaled < 16)
+		set_main_motor_speed(16);
+	else
+		set_main_motor_speed(main_motor_speed_unscaled);
+
+	if (main_motor_speed_unscaled == 0) {
+		OCR1B = 0;			// Zero speed
+		PORTC |= _BV(PC0)		// Set direction
+		       | _BV(PC1);		// Set enable
+	}
+}
+
+
 void main_motor_stop() {
 	main_motor_speed_request = 0;
 }
