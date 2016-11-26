@@ -367,17 +367,17 @@ void init(void) {
 
 	// UART
 
-	UBRR0H = UBRRH_VALUE;		// Baud rate
-	UBRR0L = UBRRL_VALUE;
+	UBRR1H = UBRRH_VALUE;		// Baud rate
+	UBRR1L = UBRRL_VALUE;
 
 #if USE_2X
-	UCSR0A |= _BV(U2X0);		// UART double speed
+	UCSR1A |= _BV(U2X0);		// UART double speed
 #else
-	UCSR0A &= ~(_BV(U2X0));
+	UCSR1A &= ~(_BV(U2X0));
 #endif
 
-	UCSR0C |= _BV(UCSZ01) | _BV(UCSZ00); // 8-bit data
-	UCSR0B |= _BV(RXEN0) | _BV(TXEN0);   // Enable RX and TX
+	UCSR1C |= _BV(UCSZ01) | _BV(UCSZ00); // 8-bit data
+	UCSR1B |= _BV(RXEN0) | _BV(TXEN0);   // Enable RX and TX
 
 	//	Motor control
 
