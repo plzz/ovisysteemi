@@ -10,6 +10,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define BAUD 115200
+#include <util/setbaud.h>
+
 #include "hal2.h"
 #include "ovi.h"
 
