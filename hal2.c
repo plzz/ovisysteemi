@@ -197,6 +197,61 @@ void set_aux_motor_curr_limit(uint8_t limit)
 	CUR_LIMIT_PWM_2 = limit;
 }
 
+void main_motor_stop() {
+	set_main_motor_speed(0);
+	MOT_1_DISABLE();
+}
+
+void main_motor_cw_open(uint8_t speed) {
+	set_main_motor_speed(speed);
+	MOT_1_DIR_A();
+	MOT_1_ENABLE();
+}
+
+void main_motor_ccw_close(uint8_t speed) {
+	set_main_motor_speed(speed);
+	MOT_1_DIR_A();
+	MOT_1_ENABLE();
+}
+
+void aux_motor_stop() {
+	set_aux_motor_speed(0);
+	MOT_2_DISABLE();
+}
+
+void aux_motor_cw_close(uint8_t speed) {
+	set_aux_motor_speed(speed);
+	MOT_2_DIR_A();
+	MOT_2_ENABLE();
+}
+
+void aux_motor_ccw_open(uint8_t speed) {
+	set_aux_motor_speed(speed);
+	MOT_2_DIR_B();
+	MOT_2_ENABLE();
+}
+
+void magnet_off() {
+	PORTB &= ~(_BV(PB5));
+}
+
+void magnet_on() {
+	PORTB |= _BV(PB5);
+
+}
+
+bool door_nearly_open() {
+	return (PORTC & _BV(PC2));
+}
+
+bool door_fully_open() {
+	return (PORTG & _BV(PG2));
+}
+
+bool door_fully_closed() {
+	return (PORTC & _BV(PC1));
+}
+
 bool sensor_proximity() {
 	return ((~PINA)&(1<<0));
 }
@@ -228,7 +283,6 @@ bool door_nearly_closed() {
 bool aux_encoder() {
 	return ((~PINC)&(1<<3));
 }
-
 
 void init(void) {
 	// DDR and pull-ups
