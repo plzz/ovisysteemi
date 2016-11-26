@@ -197,6 +197,37 @@ void set_aux_motor_curr_limit(uint8_t limit)
 	CUR_LIMIT_PWM_2 = limit;
 }
 
+bool sensor_proximity() {
+	return ((~PINA)&(1<<0));
+}
+
+bool button_openclose() {
+	return ((~PINA)&(1<<1));
+}
+
+bool button_stop() {
+	return ((~PINA)&(1<<2));
+}
+
+bool main_encoder() {
+	return ((~PINC)&(1<<7));
+}
+
+bool aux_outdoor_limit() {
+	return ((~PINC)&(1<<5));
+}
+
+bool aux_indoor_limit() {
+	return ((~PINC)&(1<<6));
+}
+
+bool door_nearly_closed() {
+	return ((~PINC)&(1<<2));
+}
+
+bool aux_encoder() {
+	return ((~PINC)&(1<<3));
+}
 
 
 void init(void) {
