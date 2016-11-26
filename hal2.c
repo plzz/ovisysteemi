@@ -6,6 +6,7 @@
 #include <avr/interrupt.h>
 #include <avr/sfr_defs.h>
 #include <util/delay.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
