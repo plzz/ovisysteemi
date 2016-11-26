@@ -137,13 +137,13 @@ void handle_io(enum state_t *state) {
 		break;
 
 	case 'z': // aux open
-		aux_motor_ccw_open();
+		aux_motor_ccw_open(255);
 		_delay_ms(250);
 		aux_motor_stop();
 		break;
 
 	case 'x': // aux close
-		aux_motor_cw_close();
+		aux_motor_cw_close(255);
 		_delay_ms(250);
 		aux_motor_stop();
 		break;
@@ -233,7 +233,7 @@ int main (void)
 			// Start the auxiliary motor to open the middle of the door.
 			// Wait until door_nearly_closed opens.
 			case S_OPENING3:
-				aux_motor_ccw_open();
+				aux_motor_ccw_open(255);
 				main_motor_cw_open(MAIN_MOTOR_MED_SPEED);
 				if (door_nearly_closed()) {
 					state = S_OPENING4;
@@ -258,7 +258,7 @@ int main (void)
 				if (aux_indoor_limit()) {
 					aux_motor_stop();
 				} else {
-					aux_motor_ccw_open();
+					aux_motor_ccw_open(255);
 				}
 				if (door_nearly_open()) {
 					main_motor_cw_open(MAIN_MOTOR_BRAKE_SPEED);
@@ -279,7 +279,7 @@ int main (void)
 				if (aux_indoor_limit()) {
 					aux_motor_stop();
 				} else {
-					aux_motor_ccw_open();
+					aux_motor_ccw_open(255);
 				}
 				if (door_fully_open()) {
 					main_motor_stop();
@@ -297,7 +297,7 @@ int main (void)
 					aux_motor_stop();
 					state = S_CLOSING3;
 				} else {
-					aux_motor_cw_close();
+					aux_motor_cw_close(255);
 				}
 				break;
 
@@ -362,7 +362,7 @@ int main (void)
 					s_closing8_timer = 0;
 					state = S_CLOSING8;
 				} else {
-					aux_motor_cw_close();
+					aux_motor_cw_close(255);
 					main_motor_ccw_close(MAIN_MOTOR_MIN_SPEED);
 				}
 				break;
@@ -379,7 +379,7 @@ int main (void)
 					aux_motor_stop();
 					state = S_CLOSED;
 				} else {
-					aux_motor_ccw_open();
+					aux_motor_ccw_open(255);
 				}
 				break;
 	
