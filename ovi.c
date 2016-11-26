@@ -46,7 +46,8 @@ enum err_t { E_NOERR = 0,
              E_MAIN_MOTOR_FAULT = 2,
              E_AUX_MOTOR_FAULT = 3 };
 
-ISR(TIMER0_OVF_vect) {
+// Callback for timer interrupt. Increments counters.
+void timer_callback(void) {
 	TCNT0 = 0; // Zero the counter again.
 
 	if (++s_opening1_timer > 252) {
