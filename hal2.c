@@ -10,6 +10,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Mechanical constants
+int const MAIN_MOTOR_PWM_TOP = 255;
+int const MAIN_MOTOR_BRAKE_SPEED = 120;
+int const MAIN_MOTOR_MIN_SPEED = 150;
+int const MAIN_MOTOR_MED_SPEED = 254;
+int const MAIN_MOTOR_MAX_SPEED = 255;
+int const MAGNET_OPEN_WAIT = 5;		// 10ths of a second
+
 #define cbi(x,y) x &= ~(1<<(y))
 #define sbi(x,y) x |= (1<<(y))
 

@@ -1,14 +1,14 @@
 #ifndef HAL2_H
 #define HAL2_H
 
-// Configurable constants
+// Mechanical constants
 
-int const MAIN_MOTOR_PWM_TOP = 255;
-int const MAIN_MOTOR_BRAKE_SPEED = 120;
-int const MAIN_MOTOR_MIN_SPEED = 150;
-int const MAIN_MOTOR_MED_SPEED = 254;
-int const MAIN_MOTOR_MAX_SPEED = 255;
-int const MAGNET_OPEN_WAIT = 5;		// 10ths of a second
+extern int const MAIN_MOTOR_PWM_TOP = 255;
+extern int const MAIN_MOTOR_BRAKE_SPEED = 120;
+extern int const MAIN_MOTOR_MIN_SPEED = 150;
+extern int const MAIN_MOTOR_MED_SPEED = 254;
+extern int const MAIN_MOTOR_MAX_SPEED = 255;
+extern int const MAGNET_OPEN_WAIT = 5;		// 10ths of a second
 
 void init(void);
 
