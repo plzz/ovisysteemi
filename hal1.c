@@ -164,12 +164,12 @@ void aux_motor_stop() {
 	       | _BV(PC2);		// Set enable
 }
 
-void aux_motor_cw_close() {
+void aux_motor_cw_close(uint8_t speed) {
 	PORTC |= _BV(PC3);		// Set direction -> CW (open)
 	PORTC &= ~(_BV(PC2));		// Clear enable
 }
 
-void aux_motor_ccw_open() {
+void aux_motor_ccw_open(uint8_t speed) {
 	PORTC &= ~(_BV(PC3)		// Set direction -> CCW (close)
 	         | _BV(PC2));		// Set enable
 }
