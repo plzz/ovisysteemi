@@ -151,7 +151,7 @@ void main_motor_ccw_close(uint8_t speed) {
 	         | _BV(PC1));		// Clear enable
 }
 
-void set_main_motor_speed(int speed) {
+static void set_main_motor_speed(int speed) {
 	OCR1B = speed;
 }
 
