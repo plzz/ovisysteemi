@@ -15,8 +15,6 @@ void init(void);
 void main_motor_stop();
 void main_motor_cw_open(uint8_t speed);
 void main_motor_ccw_close(uint8_t speed);
-void set_main_motor_speed(int speed);
-int get_main_motor_speed();
 void aux_motor_stop();
 void aux_motor_cw_close();
 void aux_motor_ccw_open();
