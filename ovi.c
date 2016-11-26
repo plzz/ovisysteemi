@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include <util/delay.h>
 
-#include "hal1.h"
+#include "ovi.h"
+#include "hal2.h"
 
 // Globals
 
