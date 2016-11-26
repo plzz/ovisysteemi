@@ -260,15 +260,15 @@ void magnet_on() {
 }
 
 bool door_nearly_open() {
-	return (PORTC & _BV(PC2));
+	return (PINC & _BV(PC2));
 }
 
 bool door_fully_open() {
-	return (PORTG & _BV(PG2));
+	return (PING & _BV(PG2));
 }
 
 bool door_fully_closed() {
-	return (PORTC & _BV(PC1));
+	return (PINC & _BV(PC1));
 }
 
 bool sensor_proximity() {
