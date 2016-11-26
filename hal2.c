@@ -362,6 +362,20 @@ void init(void) {
 				// G3 door_fully_open (input)
 	DDRG  |= _BV(PG4);	// G4 Unused output FETOUT4 (output)
 
+	// UART
+
+	UBRR0H = UBRRH_VALUE;		// Baud rate
+	UBRR0L = UBRRL_VALUE;
+
+#if USE_2X
+	UCSR0A |= _BV(U2X0);		// UART double speed
+#else
+	UCSR0A &= ~(_BV(U2X0));
+#endif
+
+	UCSR0C |= _BV(UCSZ01) | _BV(UCSZ00); // 8-bit data
+	UCSR0B |= _BV(RXEN0) | _BV(TXEN0);   // Enable RX and TX
+
 	//	Motor control
 
 	// Timer3 Channels A and B generate PWM signals for RC DACs to generate
